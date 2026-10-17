@@ -17,3 +17,4 @@ data/
 *.db
 *.log
 config/groups.yaml
+REVISION

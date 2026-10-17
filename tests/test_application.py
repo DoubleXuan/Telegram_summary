@@ -37,3 +37,12 @@ async def test_scheduled_digest_catches_up_before_draining(caplog) -> None:
     assert result.message_count == 7
     assert "Scheduled catch-up saved 7 new messages" in caplog.text
     assert "Scheduled digest finished: status=delivered messages=7" in caplog.text
+
+
+def test_deployed_revision_reads_file_or_reports_unknown(tmp_path) -> None:
+    from tg_digest.application import deployed_revision
+
+    revision = tmp_path / "REVISION"
+    assert deployed_revision(revision) == "unknown"
+    revision.write_text("f0a0323abcde-dirty\n", encoding="utf-8")
+    assert deployed_revision(revision) == "f0a0323abcde-dirty"

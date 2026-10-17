@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 from telethon import events
 
@@ -14,6 +15,14 @@ from .summarizer import AnthropicSummarizer
 from .telegram_clients import TelegramClients
 
 LOGGER = logging.getLogger(__name__)
+
+
+def deployed_revision(path: Path = Path("REVISION")) -> str:
+    """Return the git revision written by deploy/deploy-remote.sh, if any."""
+    try:
+        return path.read_text(encoding="utf-8").strip() or "unknown"
+    except OSError:
+        return "unknown"
 
 
 async def run_scheduled_digest(
@@ -130,7 +139,7 @@ async def run_application(settings: AppSettings, run_once: bool = False) -> None
             maintenance_callback=service.run_maintenance if maintenance.enabled else None,
         )
         scheduler.start()
-        LOGGER.info("Telegram digest service started")
+        LOGGER.info("Telegram digest service started (revision %s)", deployed_revision())
         await clients.bot.run_until_disconnected()
     finally:
         if scheduler is not None and scheduler.running:
