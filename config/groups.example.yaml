@@ -1,0 +1,64 @@
+timezone: Asia/Shanghai
+initial_backfill_messages: 200
+
+profiles:
+  wool:
+    topics:
+      - 银行开户与绑卡奖励
+      - 推荐邀请与新户奖励
+      - 返现、赠金与消费达标
+      - 活动截止、名额和到账反馈
+    keywords:
+      - 开户奖励
+      - 邀请奖励
+      - 返现
+      - 赠金
+      - 截止
+      - 到账
+      - 风控
+    ignore_keywords: []
+
+summary:
+  cron: "0 8-23/3 * * *"
+  model: claude-opus-5  # ANTHROPIC_MODEL in .env overrides this value.
+  effort: high
+  direct_summary_max_chars: 80000
+  chunk_max_chars: 120000
+  max_p2_items: 5
+  max_messages_per_run: 5000
+  max_batches_per_trigger: 3
+  output_repair_attempts: 1
+  max_run_failures: 3
+
+maintenance:
+  enabled: true
+  retention_days: 90
+  cron: "30 3 * * 0"
+  vacuum: true
+
+groups:
+  - name: AI 开发群
+    chat_id: -1001234567890
+    priority: high
+    topics:
+      - Claude
+      - Agent
+      - API
+    keywords:
+      - 发布
+      - 停用
+      - 涨价
+      - 漏洞
+    ignore_keywords:
+      - 推广
+      - 广告
+
+  - name: 优惠交流群
+    profile: wool
+    chat_id: -1009876543210
+    priority: normal
+
+  # A public username can be used instead of chat_id.
+  # - name: Public channel
+  #   username: example_channel
+  #   priority: normal

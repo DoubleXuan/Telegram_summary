@@ -1,0 +1,19 @@
+[Unit]
+Description=Telegram Digest Service
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/Telegram_summary
+Environment=TG_DIGEST_LOG_CONSOLE=false
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/root/Telegram_summary/.venv/bin/tg-digest run
+Restart=always
+RestartSec=20
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
