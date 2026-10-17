@@ -180,7 +180,10 @@ LaunchAgent 常驻运行后，请通过 Bot `/summary` 手动触发，不要同�
 ```bash
 ./deploy/deploy-remote.sh            # 默认 dmit-us-la:/root/Telegram_summary
 ./deploy/deploy-remote.sh host /path # 指定其他主机或目录
+./deploy/deploy-remote.sh --force    # 临时部署未提交或未推送的代码
 ```
+
+脚本只部署已提交且已推送到上游分支的代码，否则拒绝执行。部署的 commit 会写入服务器上的 `REVISION` 文件，服务启动日志 `Telegram digest service started (revision ...)` 也会打印该版本；使用 `--force` 时版本号带 `-dirty` 后缀。回滚时在本地 `git checkout <旧commit>` 后加 `--force` 重新部署即可。
 
 同步会排除 `.env`、`config/groups.yaml`、`data/` 和 `.venv/`，服务器上的密钥、群配置、session、数据库和日志不会被覆盖。
 
